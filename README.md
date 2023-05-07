@@ -34,7 +34,7 @@ We'll use Pyhthon to make a simple authentification using kerberos .
 
 Here is what we need to able to do so :
 
-###First we need to make sure Python is installed and up to date 
+### First we need to make sure Python is installed and up to date 
 
 ```bash
 sudo apt update
@@ -44,41 +44,41 @@ sudo apt install python3 python3-pip
 ```
 
 
-###Now we need to add the dependecies we'll use in the project:
+### Now we need to add the dependecies we'll use in the project:
 ```bash
 pip3 install flask flask-kerberos
 ```
 
 Warning!!!!!
-##You may encoutner some issue here, so if it the case you'll have to install flask first and then flask-kerberos :
+## You may encoutner some issue here, so if it the case you'll have to install flask first and then flask-kerberos :
 ```bash
 pip3 install flask
 ```
-##And then:
+## And then:
 ```bash
 pip3 install flask flask-kerberos
 ```
 
 So now we have to install the kerbros server , our simple app will use it for the AUTH.
 
-###Make sure everything is up to date:
+### Make sure everything is up to date:
 ```bash
 sudo apt update
 ```
 
-##after this:
+## after this:
 ```bash
 sudo apt install krb5-kdc krb5-admin-server
 ```
 
 After the installation of our server , we have to make some configuration 
 
-##You will have to open the file krb5.conf , you can do so with this command
+## You will have to open the file krb5.conf , you can do so with this command
 
 ```bash
 sudo nano /etc/krb5.conf
 ```
-##The configuration depends on your need is totaly up to you, but bellow you'll have an exemple:
+## The configuration depends on your need is totaly up to you, but bellow you'll have an exemple:
 
 ```bash
 [libdefaults]
@@ -100,45 +100,45 @@ sudo nano /etc/krb5.conf
   example.com = EXAMPLE.COM
 ```
 
-##Default name is **EXAMPLE.COM** and default kdc server is **kerberos.example.com**
+## Default name is **EXAMPLE.COM** and default kdc server is **kerberos.example.com**
 
 
 
 
 
-##For the suite , we'll have to create an administration :
+## For the suite , we'll have to create an administration :
 
 ```bash
 sudo kadmin.local -q "addprinc admin/admin"
 ```
 The first **admin** is the name and the second is the password, you can do as you want and give it anither name
 
-##Then you will have to add the users :
+## Then you will have to add the users :
 ```bash
 sudo kadmin.local -q "addprinc user1"
 sudo kadmin.local -q "addprinc user2"
 ```
 
-###You can verify that it has work with the following command 
+### You can verify that it has work with the following command 
 ```bash
 sudo kadmin.local -q "listprincs"
 ```
 The command below will display all the principals users created previously 
 
 
-##You will also will have to deploy an HTTP service key for your application with the following command:
+## You will also will have to deploy an HTTP service key for your application with the following command:
 ```bash
 sudo kadmin.local -q "addprinc -randkey HTTP/webapp.example.com"
 ```
 
 We have created a key for the application on the HTTP server , we used **randkey** , but you can specify the algorithm you want to use for the generation of your key .
 
-##Next we'll stock this key in the file with the command:
+## Next we'll stock this key in the file with the command:
 ```bash
 sudo kadmin.local -q "ktadd -k /etc/krb5.keytab HTTP/webapp.example.com"
 ```
 
-##And for the final step of Kerbros , we'll ad the authorisation for the two users created previously :
+## And for the final step of Kerbros , we'll ad the authorisation for the two users created previously :
 ```bash
 sudo kadmin.local -q "addprinc -policy user_policy +allow_login_as user1"
 sudo kadmin.local -q "addprinc -policy user_policy +allow_login_as user2"
@@ -147,7 +147,7 @@ sudo kadmin.local -q "addprinc -policy user_policy +allow_login_as user2"
 
 
 
-#Since our kerberos configuration is done , we can take a look at Python .
+# Since our kerberos configuration is done , we can take a look at Python .
 
 This code uses the Flask-Kerberos extension to handle Kerberos authentication. 
 
@@ -157,7 +157,7 @@ The /logout route allows the user to log out.
 
 The handle_auth_error and handle_forbidden_error functions are called when authentication fails or if the user does not have the necessary permissions to access a resource.
 
-##To run the code , you can run the commande :
+## To run the code , you can run the commande :
 ```bash
 python3 app.py
 ```
